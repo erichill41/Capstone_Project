@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 
 function ReservationCreate() {
@@ -16,19 +17,22 @@ function ReservationCreate() {
     people: "1",
   })
 
-  // TODO Create Change Handler
-
+  // TODO Create Change Handler √
   const handleChange = ({ target }) => {
     setReservation({
       ...reservation,
       [target.name]: target.value,
     })
   }
-  // TODO Create Submit Handler
+
+  // TODO Create Submit Handler √
   async function handleSubmit(event) {
     event.preventDefault();
-    
-    history.push('/')
+    createReservation(reservation)
+      .then(() => {
+        history.push('/');
+      })
+      .catch(setError);
   }
 
   return (
