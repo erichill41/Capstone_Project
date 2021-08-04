@@ -5,7 +5,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkful-Ed/starter-restaurant-reservation"
+    "url": "https://github.com/erichill41/Capstone_Project/tree/main"
   },
   "scripts": {
     "build": "npm -prefix front-end run build",

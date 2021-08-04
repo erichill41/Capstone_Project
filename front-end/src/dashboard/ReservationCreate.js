@@ -4,6 +4,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 
 function ReservationCreate() {
 
+  const history = useHistory();
   const [error, setError] = useState(null);
 
   const [reservation, setReservation] = useState({
@@ -16,13 +17,25 @@ function ReservationCreate() {
   })
 
   // TODO Create Change Handler
+
+  const handleChange = ({ target }) => {
+    setReservation({
+      ...reservation,
+      [target.name]: target.value,
+    })
+  }
   // TODO Create Submit Handler
+  async function handleSubmit(event) {
+    event.preventDefault();
+    
+    history.push('/')
+  }
 
   return (
     <main>
-      <h1> Create a Reservation </h1>
+      <h1> Create A Reservation </h1>
       <ErrorAlert error={error} />
-      <form>
+      <form onSubmit={handleSubmit} className="form-group">
         <div className="row mb-3">
           <div className="col-4 form-group">
             <label className="form-label" htmlFor="first_name">
@@ -33,6 +46,7 @@ function ReservationCreate() {
               id="first_name"
               name="first_name"
               type="text"
+              onChange={handleChange}
               required="true"
               value={reservation.first_name}
             />
@@ -47,6 +61,7 @@ function ReservationCreate() {
               id="last_name"
               name="last_name"
               type="text"
+              onChange={handleChange}
               required="true"
               value={reservation.last_name}
             />
@@ -63,6 +78,7 @@ function ReservationCreate() {
               id="mobile_number"
               name="mobile_number"
               type="text"
+              onChange={handleChange}
               required="true"
               placeholder="(xxx) xxx-xxxx"
               value={reservation.mobile_number}
@@ -77,7 +93,9 @@ function ReservationCreate() {
               className="form-control"
               id="people"
               name="people"
+              onChange={handleChange}
               required={true}
+              value={reservation.people}
             >
               <option> 1 </option>
               <option> 2 </option>
@@ -94,6 +112,41 @@ function ReservationCreate() {
             <small className="form-text text-muted"> Select Party Size </small>
           </div>
         </div>
+        <div className="row mb-3">
+          <div className="col-4 form-group"> 
+          <label>
+            Reservation Date
+          </label>
+          <input
+            className="form-control"
+            id="reservation_date"
+            name="reservation_date"
+            type="date"
+            onChange={handleChange}
+            required="true"
+            placeholder="YYYY-MM-DD"
+            value={reservation.reservation_date}
+          />
+          <small className="form-text text-muted"> Enter Reservation Date </small>
+          </div>
+          <div className="col-4 form-group"> 
+          <label>
+            Reservation Time
+          </label>
+          <input
+            className="form-control"
+            id="reservation_time"
+            name="reservation_time"
+            type="time"
+            onChange={handleChange}
+            required="true"
+            value={reservation.reservation_time}
+          />
+          <small className="form-text text-muted"> Enter Reservation Time </small>
+          </div>
+        </div>
+        <button type="button" onClick={() => history.push('/')} className="btn btn-secondary mr-2"> Cancel </button>
+        <button type="submit" className="btn btn-primary"> Submit Reservation </button>
       </form>
     </main>
   );
