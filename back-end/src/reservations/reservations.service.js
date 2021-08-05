@@ -4,7 +4,7 @@ function list() {
   return knex('reservations').select('*');
 }
 
-function create() {
+function create(newReservation) {
   return knex('reservations').insert(newReservation).returning('*');
 }
 

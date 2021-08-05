@@ -14,7 +14,7 @@ function ReservationCreate() {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: "1",
+    people: 1,
   })
 
   // TODO Create Change Handler √
@@ -30,7 +30,7 @@ function ReservationCreate() {
     event.preventDefault();
     createReservation(reservation)
       .then(() => {
-        history.push('/');
+        history.push('/dashboard');
       })
       .catch(setError);
   }
@@ -51,7 +51,7 @@ function ReservationCreate() {
               name="first_name"
               type="text"
               onChange={handleChange}
-              required="true"
+              required={true}
               value={reservation.first_name}
             />
             <small className="form-text text-muted"> Enter First Name </small>
@@ -66,7 +66,7 @@ function ReservationCreate() {
               name="last_name"
               type="text"
               onChange={handleChange}
-              required="true"
+              required={true}
               value={reservation.last_name}
             />
             <small className="form-text text-muted"> Enter Last Name </small>
@@ -81,9 +81,12 @@ function ReservationCreate() {
               className="form-control"
               id="mobile_number"
               name="mobile_number"
-              type="text"
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              // minLength="9"
+              // maxLength="10"
               onChange={handleChange}
-              required="true"
+              required={true}
               placeholder="(xxx) xxx-xxxx"
               value={reservation.mobile_number}
             />
@@ -127,8 +130,7 @@ function ReservationCreate() {
             name="reservation_date"
             type="date"
             onChange={handleChange}
-            required="true"
-            placeholder="YYYY-MM-DD"
+            required={true}
             value={reservation.reservation_date}
           />
           <small className="form-text text-muted"> Enter Reservation Date </small>
@@ -143,13 +145,13 @@ function ReservationCreate() {
             name="reservation_time"
             type="time"
             onChange={handleChange}
-            required="true"
+            required={true}
             value={reservation.reservation_time}
           />
           <small className="form-text text-muted"> Enter Reservation Time </small>
           </div>
         </div>
-        <button type="button" onClick={() => history.push('/')} className="btn btn-secondary mr-2"> Cancel </button>
+        <button type="button" onClick={() => history.goBack()} className="btn btn-secondary mr-2"> Cancel </button>
         <button type="submit" className="btn btn-primary"> Submit Reservation </button>
       </form>
     </main>

@@ -53,7 +53,7 @@ async function fetchJson(url, options, onCancel) {
 }
 
 export async function createReservation(reservation, signal) {
-  const url = `${API_BASE_URL}/reservations`;
+  const url = `${API_BASE_URL}/reservations/new`;
   const options = {
     method: 'POST',
     headers,
