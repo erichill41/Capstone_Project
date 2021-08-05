@@ -2,42 +2,59 @@ import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { previous, next } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
+import { useLocation, useHistory, useRouteMatch } from "react-router-dom";
+import ReservationDetail from "./ReservationDetail";
 
-/**
- * Defines the dashboard page.
- * @param date
- *  the date for which the user wants to view reservations.
- * @returns {JSX.Element}
- */
 function Dashboard({ date }) {
+
   const [reservations, setReservations] = useState([]);
   const [currentDate, setCurrentDate] = useState(date);
   const [reservationsError, setReservationsError] = useState(null);
-  console.log(reservations);
+  
 
-  useEffect(loadDashboard, [date]);
+  const url = useRouteMatch();
+  const history = useHistory();
+  const location = useLocation();
+  const searchedDate = location.search.slice(-10);
+
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    if (currentDate === date) {
+      listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    } else {
+      listReservations({ currentDate }, abortController.signal)
+      .then(setReservations)
+      .catch(setReservationsError);
+    }
+    if (searchedDate && searchedDate !== '') {
+      setCurrentDate(searchedDate);
+    }
+    
     return () => abortController.abort();
   }
 
+  useEffect(loadDashboard, [date, currentDate, location.search, searchedDate, url]);
+  console.log(reservations);
+
   const previousHandler = (event) => {
     event.preventDefault();
+    history.push('/dashboard');
     setCurrentDate(previous(currentDate));
   }
 
   const todayHandler = (event) => {
     event.preventDefault();
+    history.push('/dashboard');
     setCurrentDate(date);
   }
 
   const nextHandler = (event) => {
     event.preventDefault();
+    history.push('/dashboard');
     setCurrentDate(next(currentDate));
   }
 
@@ -45,66 +62,61 @@ function Dashboard({ date }) {
 
   // configuring table for current day
   
-  let filtered = reservations.filter((reservation) => reservation.reservation_date === currentDate);
-  
-  const filteredRows = filtered.map((reservation) => (
-    <tr key={reservation.reservation_time}>
-      <th scope="row"> {reservation.reservation_id} </th>
-      <td> {reservation.first_name} </td>
-      <td> {reservation.last_name} </td>
-      <td> {reservation.people} </td>
-      <td> {reservation.mobile_number} </td>
-      <td> {reservation.reservation_date} </td>
-      <td> {reservation.reservation_time} </td>
-      <td>
-          <button className="btn btn-primary "> Edit </button>
-      </td>
-    </tr>
-  ))
-  
-  
-
-  return (
-    <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date: {currentDate}</h4>
-      </div>
-      <ErrorAlert error={reservationsError} />
-      <div className="row mb-3">
-        <div className="">
-          <button className="btn btn-primary ml-3" onClick={previousHandler}> Previous Day </button>
-        </div>
-        <div className="">
-          <button className="btn btn-primary ml-3" onClick={todayHandler}> Today </button>
-        </div>
-        <div className="">
-          <button className="btn btn-primary ml-3" onClick={nextHandler}> Next Day </button>
+  if (reservations.length > 0) {
+    return (
+      <main>
+        <div className="mb-3">
+          <h1>Dashboard</h1>
         </div>
         
-      </div>
-      
+        <div className="d-md-flex mb-3">
+          <div className="row mb-3">
+          <h4 className="ml-3">Reservations for date: {currentDate} </h4>
+            <div className="">
+              <button className="btn btn-primary ml-3" onClick={previousHandler}> Previous Day </button>
+            </div>
+            <div className="">
+              <button className="btn btn-primary ml-3" onClick={todayHandler}> Today </button>
+            </div>
+            <div className="">
+              <button className="btn btn-primary ml-3" onClick={nextHandler}> Next Day </button>
+            </div>
+            
+          </div>
+        </div>
+        <ErrorAlert error={reservationsError} />
+        <div>
+          <h4> Reservation List </h4>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col"> ID </th>
+                <th scope="col"> First Name </th>
+                <th scope="col"> Last Name </th>
+                <th scope="col"> Party Size </th>
+                <th scope="col"> Phone Number </th>
+                <th scope="col"> Reservation Date </th>
+                <th scope="col"> Reservation Time </th>
+               </tr>
+             </thead>
+            <tbody>
+              {reservations && reservations.map((res) => (
+                <ReservationDetail reservation={res} />
+              ))}
+            </tbody>
+         </table>
+        </div>
+        {/* {JSON.stringify(reservations)} */}
+      </main>
+    );
+  } else {
+    return (
       <div>
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col"> ID </th>
-              <th scope="col"> First Name </th>
-              <th scope="col"> Last Name </th>
-              <th scope="col"> Party Size </th>
-              <th scope="col"> Phone Number </th>
-              <th scope="col"> Reservation Date </th>
-              <th scope="col"> Reservation Time </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredRows}
-          </tbody>
-        </table>
+        <h4> Dashboard Loading... </h4>
       </div>
-      {/* {JSON.stringify(reservations)} */}
-    </main>
-  );
+    )
+  }
+
 }
 
 export default Dashboard;

@@ -30,7 +30,7 @@ function ReservationCreate() {
     event.preventDefault();
     createReservation(reservation)
       .then(() => {
-        history.push('/dashboard');
+        history.push(`/dashboard?date=${reservation.reservation_date}`);
       })
       .catch(setError);
   }
