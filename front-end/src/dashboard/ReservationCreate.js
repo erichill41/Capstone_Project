@@ -81,10 +81,7 @@ function ReservationCreate() {
               className="form-control"
               id="mobile_number"
               name="mobile_number"
-              type="tel"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              // minLength="9"
-              // maxLength="10"
+              type="text"
               onChange={handleChange}
               required={true}
               placeholder="(xxx) xxx-xxxx"
@@ -96,27 +93,17 @@ function ReservationCreate() {
             <label className="form-label" htmlFor="mobile_number">
               Party Size
             </label>
-            <select 
+            <input
               className="form-control"
               id="people"
               name="people"
+              type="number"
               onChange={handleChange}
               required={true}
               value={reservation.people}
-            >
-              <option> 1 </option>
-              <option> 2 </option>
-              <option> 3 </option>
-              <option> 4 </option>
-              <option> 5 </option>
-              <option> 6 </option>
-              <option> 7 </option>
-              <option> 8 </option>
-              <option> 9 </option>
-              <option> 10+ </option>
-
-            </select>
-            <small className="form-text text-muted"> Select Party Size </small>
+              
+            />
+            <small className="form-text text-muted"> Enter Party Size </small>
           </div>
         </div>
         <div className="row mb-3">

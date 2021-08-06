@@ -62,7 +62,7 @@ function Dashboard({ date }) {
 
   // configuring table for current day
   
-  if (reservations.length > 0) {
+  if (reservations) {
     return (
       <main>
         <div className="mb-3">

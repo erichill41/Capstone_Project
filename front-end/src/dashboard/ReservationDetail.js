@@ -8,10 +8,13 @@ function ReservationDetail({ reservation }) {
   
   // const history = useHistory();
   
+  // const editHandler = (event) => {
+
+  // }
   
   
   return (
-    <div className="">
+    <>
       <tr key={currentReservation.reservation_id}>
         <th scope="row"> {reservation.reservation_id} </th>
         <td> {currentReservation.first_name} </td>
@@ -24,7 +27,7 @@ function ReservationDetail({ reservation }) {
           <button className="btn btn-primary "> Edit </button>
         </td>
       </tr>
-    </div>
+    </>
   );
 }
 
