@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 function ReservationDetail({ reservation }) {
   const [currentReservation, setCurrentReservation] = useState(reservation);
-  console.log(currentReservation);
 
   useEffect(() => {
     setCurrentReservation(reservation);
@@ -27,6 +26,14 @@ function ReservationDetail({ reservation }) {
         <td> {currentReservation.mobile_number} </td>
         <td> {currentReservation.reservation_date} </td>
         <td> {currentReservation.reservation_time} </td>
+        <td>
+          <Link 
+            to={`/reservations/${currentReservation.reservation_id}/seat`}
+            href={`/reservations/${currentReservation.reservation_id}/seat`}
+          >
+            <button className="btn btn-primary "> Seat </button>
+          </Link>
+        </td>
         <td>
           <button className="btn btn-primary "> Edit </button>
         </td>
