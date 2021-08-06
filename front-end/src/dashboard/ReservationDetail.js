@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useHistory } from "react-router-dom";
 
 
 function ReservationDetail({ reservation }) {
   const [currentReservation, setCurrentReservation] = useState(reservation);
   console.log(currentReservation);
+
+  useEffect(() => {
+    setCurrentReservation(reservation);
+  }, [reservation])
   
   // const history = useHistory();
   
@@ -16,7 +20,7 @@ function ReservationDetail({ reservation }) {
   return (
     <>
       <tr key={currentReservation.reservation_id}>
-        <th scope="row"> {reservation.reservation_id} </th>
+        <th scope="row"> {currentReservation.reservation_id} </th>
         <td> {currentReservation.first_name} </td>
         <td> {currentReservation.last_name} </td>
         <td> {currentReservation.people} </td>
