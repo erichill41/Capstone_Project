@@ -70,13 +70,41 @@ function hasReservationDate(req, res, next) {
 }
 
 function validDate(req, res, next) {
-  const date = Date.parse(req.body.data.reservation_date);
-  if (date) {
+  const date = req.body.data.reservation_date;
+  const valid = Date.parse(date);
+  console.log(date);
+
+  if (valid) {
     return next();
   }
   next({
     status: 400,
     message: "reservation_date must be valid date",
+  })
+}
+
+function noTuesday(req, res, next) {
+  const date = req.body.data.reservation_date;
+  const weekday = new Date(date).getUTCDay();
+  if (weekday !== 2) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "Restaurant is closed on Tuesdays.",
+  })
+}
+
+function noPastReservations(req, res, next) {
+  const { reservation_date, reservation_time } = req.body.data;
+  const now = Date.now();
+  const proposedReservation = new Date(`${reservation_date} ${reservation_time}.valueOf()`);
+  if (proposedReservation > now) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "Reservation must be in future.",
   })
 }
 
@@ -116,6 +144,7 @@ function hasValidPeople(req, res, next) {
     message: "valid people property required"
   })
 }
+
 
 /**
  * List handler for reservation resources
@@ -157,6 +186,8 @@ module.exports = {
     hasMobileNumber, 
     hasReservationDate,
     validDate,
+    noTuesday,
+    noPastReservations,
     hasReservationTime,
     validTime,
     hasValidPeople, 

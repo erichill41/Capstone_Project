@@ -120,7 +120,7 @@ function ReservationCreate() {
             required={true}
             value={reservation.reservation_date}
           />
-          <small className="form-text text-muted"> Enter Reservation Date </small>
+          <small className="form-text text-muted"> Enter Reservation Date (Closed on Tuesdays) </small>
           </div>
           <div className="col-4 form-group"> 
           <label>
