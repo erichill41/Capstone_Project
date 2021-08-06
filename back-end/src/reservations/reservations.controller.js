@@ -72,7 +72,6 @@ function hasReservationDate(req, res, next) {
 function validDate(req, res, next) {
   const date = req.body.data.reservation_date;
   const valid = Date.parse(date);
-  console.log(date);
 
   if (valid) {
     return next();
@@ -98,7 +97,8 @@ function noTuesday(req, res, next) {
 function noPastReservations(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const now = Date.now();
-  const proposedReservation = new Date(`${reservation_date} ${reservation_time}.valueOf()`);
+  const proposedReservation = new Date(`${reservation_date} ${reservation_time}`).valueOf();
+
   if (proposedReservation > now) {
     return next();
   }
@@ -129,6 +129,20 @@ function validTime(req, res, next) {
   next({
     status: 400,
     message: "reservation_time must be valid time",
+  })
+}
+
+function reservationDuringHours(req, res, next) {
+  const time = req.body.data.reservation_time;
+  console.log(time);
+  const open = "10:30";
+  const close = "21:30";
+  if (time >= open && time <= close) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "Reservation must be between 10:30AM and 9:30PM.",
   })
 }
 
@@ -190,6 +204,7 @@ module.exports = {
     noPastReservations,
     hasReservationTime,
     validTime,
+    reservationDuringHours,
     hasValidPeople, 
     asyncErrorBoundary(create)
   ],
