@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+
 
 
 function ReservationDetail({ reservation }) {
@@ -27,12 +27,9 @@ function ReservationDetail({ reservation }) {
         <td> {currentReservation.reservation_date} </td>
         <td> {currentReservation.reservation_time} </td>
         <td>
-          <Link 
-            to={`/reservations/${currentReservation.reservation_id}/seat`}
-            href={`/reservations/${currentReservation.reservation_id}/seat`}
-          >
+          <a href={`/reservations/${currentReservation.reservation_id}/seat`}>
             <button className="btn btn-primary "> Seat </button>
-          </Link>
+          </a>
         </td>
         <td>
           <button className="btn btn-primary "> Edit </button>

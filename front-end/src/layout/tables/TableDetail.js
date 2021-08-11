@@ -7,7 +7,7 @@ function TableDetail({ table }) {
     "occupied": null,
   });
 
-  console.log(currentTable);
+  // console.log(currentTable);
   
   useEffect(() => {
     setCurrentTable(table);

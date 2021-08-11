@@ -52,8 +52,8 @@ function Dashboard({ date }) {
   useEffect(loadDashboard, [date, currentDate, location.search, searchedDate, url]);
   useEffect(loadTables, [date, currentDate]);
 
-  console.log(reservations);
-  console.log('tables', tables);
+  // console.log(reservations);
+  // console.log('tables', tables);
 
   const previousHandler = (event) => {
     event.preventDefault();
