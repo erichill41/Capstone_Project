@@ -125,7 +125,7 @@ async function tableOpen(req, res, next) {
 
 async function hasEnoughSeats(req, res, next) {
   const table = res.locals.table;
-  const reservation = req.body.data;
+  const reservation = res.locals.reservation;
   console.log(reservation, table);
   if (reservation.people > table.capacity) {
     next({

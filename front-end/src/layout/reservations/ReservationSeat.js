@@ -57,8 +57,8 @@ function ReservationSeat() {
       })
       .catch(setSeatError);
     } else {
-      setSeatError();
-      history.goBack();
+      setSeatError(new Error('Capacity not sufficient'));
+      // history.goBack();
     }
   }
 

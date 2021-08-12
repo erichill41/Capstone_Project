@@ -58,7 +58,6 @@ function list() {
 }
 
 async function updateSeatRes(reservation_id, table_id) {
-  console.log(reservation_id, table_id);
   const trx = await knex.transaction();
   return trx("reservations")
     .where({ reservation_id })

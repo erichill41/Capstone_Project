@@ -12,7 +12,7 @@ function TableDetail({ table, reservations }) {
   useEffect(() => {
     if (currentTable.reservation_id) {
       setCurrentTable(table)
-      setTableStatus(`Occupied by ${currentTable.reservation_id}`)
+      setTableStatus(`Occupied`)
       setCurrentReservation(reservations.find((res) => res.reservation_id === currentTable.reservation_id));
     } else {
       setTableStatus("Open")
@@ -26,7 +26,7 @@ function TableDetail({ table, reservations }) {
 
   return (
     <>
-      <tr key={currentTable.table_id}>
+      <tr>
         <th scope="row"> {currentTable.table_id} </th>
         <td> {currentTable.table_name} </td>
         <td> {currentTable.capacity} </td>

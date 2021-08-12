@@ -20,7 +20,7 @@ function ReservationDetail({ reservation }) {
   
   return (
     <>
-      <tr key={currentReservation.reservation_id}>
+      <tr>
         <th scope="row"> {currentReservation.reservation_id} </th>
         <td> {currentReservation.first_name} </td>
         <td> {currentReservation.last_name} </td>
@@ -36,7 +36,7 @@ function ReservationDetail({ reservation }) {
           </a>
         </td>
         <td>
-          <button className="btn btn-primary "> Edit </button>
+          <button className="btn btn-primary "> TODO Edit </button>
         </td>
       </tr>
     </>

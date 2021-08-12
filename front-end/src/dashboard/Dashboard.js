@@ -113,7 +113,7 @@ function Dashboard({ date }) {
              </thead>
             <tbody>
               {reservations && reservations.map((res) => (
-                <ReservationDetail reservation={res} />
+                <ReservationDetail reservation={res} key={res.reservation_id}/>
               ))}
             </tbody>
          </table>
@@ -134,7 +134,7 @@ function Dashboard({ date }) {
              </thead>
             <tbody>
               {tables && tables.map((table) => (
-                <TableDetail table={table} reservations={reservations} />
+                <TableDetail table={table} reservations={reservations} key={table.table_id}/>
               ))}
             </tbody>
          </table>
