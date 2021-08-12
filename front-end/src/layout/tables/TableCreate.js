@@ -8,7 +8,7 @@ function TableCreate() {
   const history = useHistory();
   const [table, setTable] = useState({
     "table_name": "",
-    "capacity": 1,
+    "capacity": "",
   });
 
   const handleChange = ({ target }) => {

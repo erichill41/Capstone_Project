@@ -15,6 +15,7 @@ function ReservationCreate() {
     reservation_date: "",
     reservation_time: "",
     people: 1,
+    status: "Booked",
   })
 
   // TODO Create Change Handler √
@@ -28,7 +29,13 @@ function ReservationCreate() {
   // TODO Create Submit Handler √
   async function handleSubmit(event) {
     event.preventDefault();
-    createReservation(reservation)
+
+    console.log(reservation);
+
+    createReservation({
+      ...reservation,
+      "status": "Booked",
+    })
       .then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`);
       })

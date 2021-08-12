@@ -42,20 +42,11 @@ function ReservationSeat() {
   useEffect(loadReservations, []);
   useEffect(setCurrent, [reservations, reservation_id]);
 
-  console.log(tableFormData);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    let valid = true;
     const tableObj = JSON.parse(tableFormData);
-    console.log(tableObj, reservation_id);
-
-    if (currentRes.people > tableObj.capacity) {
-      setSeatError()
-      valid = false;
-    }
-    if (valid === true) {
+    if (currentRes.people <= tableObj.capacity) {
       updateSeat(tableObj.table_id, reservation_id)
       .then((response) => {
         const newTables = tables.map((table) => {
@@ -64,17 +55,21 @@ function ReservationSeat() {
         setTables(newTables);
         history.push('/dashboard')
       })
+      .catch(setSeatError);
+    } else {
+      setSeatError();
+      history.goBack();
     }
   }
 
 
-  console.log(currentRes);
+  // console.log(currentRes);
 
   if (tables) {
     return (
       <main> 
         <div className="mb-3">
-          <h1> This is the reservation seat form </h1>
+          <h1> Seat The Current Reservation </h1>
         </div>
         <ErrorAlert error={reservationsError} />
         <ErrorAlert error={tablesError} />

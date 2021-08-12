@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
 
 
 
 function ReservationDetail({ reservation }) {
   const [currentReservation, setCurrentReservation] = useState(reservation);
+  // const { reservation_id } = useParams();
 
   useEffect(() => {
     setCurrentReservation(reservation);
@@ -26,8 +28,10 @@ function ReservationDetail({ reservation }) {
         <td> {currentReservation.mobile_number} </td>
         <td> {currentReservation.reservation_date} </td>
         <td> {currentReservation.reservation_time} </td>
+        <td> {currentReservation.status} </td>
         <td>
-          <a href={`/reservations/${currentReservation.reservation_id}/seat`}>
+          <a            
+            href={`/reservations/${currentReservation.reservation_id}/seat`}>
             <button className="btn btn-primary "> Seat </button>
           </a>
         </td>

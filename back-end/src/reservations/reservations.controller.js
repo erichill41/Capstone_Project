@@ -187,6 +187,7 @@ function read(req, res) {
 
 async function create(req, res) {
   const newReservation = req.body.data;
+  console.log(newReservation);
   const data = await service.create(newReservation);
   res.status(201).json({ data });
 }

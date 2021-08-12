@@ -9,8 +9,8 @@ function create(newTable) {
 }
 
 function read(table_id) {
-  return knex('tables as t')
-    .leftJoin('reservations as r', 'r.reservation_id', 't.reservation_id')
+  return knex("tables as t")
+    .leftJoin("reservations as r", "r.reservation_id", "t.reservation_id")
     .select(
       "t.table_id",
       "t.table_name",
@@ -30,10 +30,18 @@ function read(table_id) {
     .then((result) => result[0]);
 }
 
+function readTable(table_id) {
+  return knex('tables as t')
+    .select('*')
+    .where({ table_id })
+    .then((result) => result[0]);
+}
+
 function readReservation(reservation_id) {
   return knex('reservations as r')
+    .select('*')
     .where({ reservation_id })
-    .then((result) => result[0]);
+    .first();
 }
 
 function readTableByRes(reservation_id) {
@@ -50,24 +58,16 @@ function list() {
 }
 
 async function updateSeatRes(reservation_id, table_id) {
+  console.log(reservation_id, table_id);
   const trx = await knex.transaction();
-  const newTable = {};
   return trx("reservations")
     .where({ reservation_id })
-    .update({ status: "seated" })
+    .update({ status: "Seated" })
     .then(() => 
       trx("tables")
         .where({ table_id })
-        .update({ reservation_id }, [
-          "table_id",
-          "table_name",
-          "capacity",
-          "reservation_id",
-        ])
-        .then((result) => (newTable = result[0]))
-    )
+        .update({ reservation_id: reservation_id }))
     .then(trx.commit)
-    .then(() => newTable)
     .catch(trx.rollback);
 }
 
@@ -75,6 +75,7 @@ module.exports = {
   create,
   list,
   read,
+  readTable,
   readReservation,
   readTableByRes,
   updateSeatRes,

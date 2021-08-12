@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { listReservations, listTables } from "../utils/api";
 import { previous, next } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useLocation, useHistory, useRouteMatch } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import ReservationDetail from "../layout/reservations/ReservationDetail";
 import TableDetail from "../layout/tables/TableDetail";
 
@@ -15,14 +15,12 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
   
-
-  const url = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
   const searchedDate = location.search.slice(-10);
 
 
-  function loadDashboard() {
+  useEffect(() => {
     const abortController = new AbortController();
     setReservationsError(null);
     if (currentDate === date) {
@@ -39,21 +37,20 @@ function Dashboard({ date }) {
     }
     
     return () => abortController.abort();
-  }
+  },[date, currentDate, location.search, searchedDate]);
 
-  function loadTables() {
+  useEffect(() => {
     const abortController = new AbortController();
     setTablesError(null);
-    listTables(abortController.signal)
+    listTables()
       .then(setTables)
       .catch(setTablesError);
-  }
 
-  useEffect(loadDashboard, [date, currentDate, location.search, searchedDate, url]);
-  useEffect(loadTables, [date, currentDate]);
+    return () => abortController.abort();
+  }, [history]);
 
-  // console.log(reservations);
-  // console.log('tables', tables);
+
+  console.log('tables', tables);
 
   const previousHandler = (event) => {
     event.preventDefault();
@@ -72,10 +69,6 @@ function Dashboard({ date }) {
     history.push('/dashboard');
     setCurrentDate(next(currentDate));
   }
-
-  // TODO figure out how to get specific day's reservations
-
-  // configuring table for current day
   
   if (reservations) {
     return (
@@ -113,6 +106,9 @@ function Dashboard({ date }) {
                 <th scope="col"> Phone Number </th>
                 <th scope="col"> Reservation Date </th>
                 <th scope="col"> Reservation Time </th>
+                <th scope="col"> Reservation Status </th>
+                <th scope="col"> Seat Reservation </th>
+                <th scope="col"> Edit Reservation </th>
                </tr>
              </thead>
             <tbody>
@@ -133,12 +129,12 @@ function Dashboard({ date }) {
                 <th scope="col"> Table Name </th>
                 <th scope="col"> Capacity </th>
                 <th scope="col"> Reservation ID </th>
-                <th scope="col"> Free / Occupied </th>
+                <th scope="col"> Table Status </th>
                </tr>
              </thead>
             <tbody>
               {tables && tables.map((table) => (
-                <TableDetail table={table} />
+                <TableDetail table={table} reservations={reservations} />
               ))}
             </tbody>
          </table>
