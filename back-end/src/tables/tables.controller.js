@@ -1,5 +1,6 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const e = require("express");
 
 
 // ---- VALIDATION MIDDLEWARE ----
@@ -80,14 +81,14 @@ async function tableExists(req, res, next) {
     return next();
   }
   next({
-    status: 400,
-    message: "table_id does not exist",
+    status: 404,
+    message: `table_id ${table_id} does not exist`,
   })
 }
 
 async function reservationExists(req, res, next) {
   const reservation_id = req.body.data.reservation_id;
-  console.log(reservation_id)
+  // console.log(reservation_id)
   const reservation = await service.readReservation(reservation_id);
   if (reservation) {
     res.locals.reservation = reservation;
@@ -111,7 +112,7 @@ async function reservationSeated(req, res, next) {
   })
 }
 
-async function tableOpen(req, res, next) {
+function tableOpen(req, res, next) {
   const table = res.locals.table;
   console.log(table);
   if (!table.reservation_id) {
@@ -121,12 +122,23 @@ async function tableOpen(req, res, next) {
     status: 400,
     message: `table_id is occupied`,
   })
-};
+}
+
+function tableNotOpen(req, res, next) {
+  const table = res.locals.table;
+  if (table.reservation_id) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "table_id is not occupied",
+  })
+}
 
 async function hasEnoughSeats(req, res, next) {
   const table = res.locals.table;
   const reservation = res.locals.reservation;
-  console.log(reservation, table);
+  // console.log(reservation, table);
   if (reservation.people > table.capacity) {
     next({
       status: 400,
@@ -157,9 +169,17 @@ async function create(req, res) {
 async function updateSeatRes(req, res) {
   const { reservation_id } = req.body.data;
   const { table_id } = req.params;
-  console.log('TABLE_ID', table_id);
+  //console.log('TABLE_ID', table_id);
   const data = await service.updateSeatRes(reservation_id, table_id);
   res.json({ data })
+}
+
+async function destroy(req, res) {
+  const { table_id } = req.params;
+  // const { reservation_id } = req.body.data;
+  const data = await service.destroyTableReservation(table_id);
+  console.log(data);
+  res.status(200).json({ data });
 }
 
 module.exports = {
@@ -178,9 +198,14 @@ module.exports = {
     hasReservationID,
     asyncErrorBoundary(tableExists),
     asyncErrorBoundary(reservationExists),
-    asyncErrorBoundary(tableOpen),
+    tableOpen,
     asyncErrorBoundary(hasEnoughSeats),
     asyncErrorBoundary(reservationSeated),
     asyncErrorBoundary(updateSeatRes),
+  ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    tableNotOpen,
+    asyncErrorBoundary(destroy),
   ],
 }

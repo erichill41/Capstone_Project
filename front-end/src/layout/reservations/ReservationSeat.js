@@ -9,7 +9,6 @@ function ReservationSeat() {
 
   const [reservationsError, setReservationsError] = useState(null);
   const [reservations, setReservations] = useState([]);
-  const [currentRes, setCurrentRes] = useState({});
 
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
@@ -33,37 +32,23 @@ function ReservationSeat() {
       .catch(setTablesError);
   }
 
-  function setCurrent() {
-    const current = reservations.find((res) => res.reservation_id === Number(reservation_id));
-    setCurrentRes(current);
-  }
-
   useEffect(loadTables, []);
-  useEffect(loadReservations, []);
-  useEffect(setCurrent, [reservations, reservation_id]);
-
+  useEffect(loadReservations, [reservations]);
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const tableObj = JSON.parse(tableFormData);
-    if (currentRes.people <= tableObj.capacity) {
-      updateSeat(tableObj.table_id, reservation_id)
-      .then((response) => {
-        const newTables = tables.map((table) => {
-          return table.table_id === response.table_id ? response : table
-        })
-        setTables(newTables);
-        history.push('/dashboard')
+    updateSeat(tableObj.table_id, reservation_id)
+    .then((response) => {
+      const newTables = tables.map((table) => {
+        return table.table_id === response.table_id ? response : table
       })
-      .catch(setSeatError);
-    } else {
-      setSeatError(new Error('Capacity not sufficient'));
-      // history.goBack();
+      setTables(newTables);
+      history.push('/dashboard')
+    })
+    .catch(setSeatError);
     }
-  }
-
-
-  // console.log(currentRes);
 
   if (tables) {
     return (

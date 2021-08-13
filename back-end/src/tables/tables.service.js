@@ -34,7 +34,7 @@ function readTable(table_id) {
   return knex('tables as t')
     .select('*')
     .where({ table_id })
-    .then((result) => result[0]);
+    .first();
 }
 
 function readReservation(reservation_id) {
@@ -70,6 +70,13 @@ async function updateSeatRes(reservation_id, table_id) {
     .catch(trx.rollback);
 }
 
+async function destroyTableReservation(table_id) {
+  return knex("tables")
+    .where({ table_id })
+    .update({ reservation_id: null })
+    .returning('*');
+}
+
 module.exports = {
   create,
   list,
@@ -78,4 +85,5 @@ module.exports = {
   readReservation,
   readTableByRes,
   updateSeatRes,
+  destroyTableReservation,
 }

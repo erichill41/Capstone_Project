@@ -19,6 +19,17 @@ function Dashboard({ date }) {
   const location = useLocation();
   const searchedDate = location.search.slice(-10);
 
+  function clearTables(tables) {
+    let result = [];
+    tables.forEach((table) => {
+      if (table.reservation_id) {
+        result.push(table);
+      }
+    })
+    return result;
+  }
+
+  let clearTableToggler = clearTables(tables);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -47,10 +58,8 @@ function Dashboard({ date }) {
       .catch(setTablesError);
 
     return () => abortController.abort();
-  }, [history]);
+  }, [clearTableToggler.length]);
 
-
-  console.log('tables', tables);
 
   const previousHandler = (event) => {
     event.preventDefault();
@@ -69,6 +78,11 @@ function Dashboard({ date }) {
     history.push('/dashboard');
     setCurrentDate(next(currentDate));
   }
+
+
+
+  console.log('TABLES', tables);
+  console.log('CLEAR TABLES', clearTableToggler);
   
   if (reservations) {
     return (
@@ -130,6 +144,10 @@ function Dashboard({ date }) {
                 <th scope="col"> Capacity </th>
                 <th scope="col"> Reservation ID </th>
                 <th scope="col"> Table Status </th>
+                {clearTableToggler.length ? 
+                  <th scope="col"> Clear Tables </th>
+                  : 
+                  <div></div>}
                </tr>
              </thead>
             <tbody>
