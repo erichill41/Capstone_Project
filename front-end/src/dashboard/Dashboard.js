@@ -58,7 +58,7 @@ function Dashboard({ date }) {
       .catch(setTablesError);
 
     return () => abortController.abort();
-  }, [clearTableToggler.length]);
+  }, [clearTableToggler.length, history]);
 
 
   const previousHandler = (event) => {
