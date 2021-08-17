@@ -33,7 +33,9 @@ function ReservationSeat() {
   }
 
   useEffect(loadTables, []);
-  useEffect(loadReservations, [reservations]);
+  useEffect(loadReservations, []);
+  
+  console.log(reservations);
   
 
   const handleSubmit = (event) => {

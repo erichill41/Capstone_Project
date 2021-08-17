@@ -19,6 +19,8 @@ function Dashboard({ date }) {
   const location = useLocation();
   const searchedDate = location.search.slice(-10);
 
+// function to know when to toggle column with clear tables button
+
   function clearTables(tables) {
     let result = [];
     tables.forEach((table) => {
@@ -28,8 +30,9 @@ function Dashboard({ date }) {
     })
     return result;
   }
-
   let clearTableToggler = clearTables(tables);
+
+// useEffect's to load reservations and tables
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -58,8 +61,9 @@ function Dashboard({ date }) {
       .catch(setTablesError);
 
     return () => abortController.abort();
-  }, [clearTableToggler.length, history]);
+  }, []);
 
+// change day handlers
 
   const previousHandler = (event) => {
     event.preventDefault();
@@ -81,8 +85,8 @@ function Dashboard({ date }) {
 
 
 
-  console.log('TABLES', tables);
-  console.log('CLEAR TABLES', clearTableToggler);
+  // console.log('TABLES', tables);
+  // console.log('CLEAR TABLES', clearTableToggler);
   
   if (reservations) {
     return (
