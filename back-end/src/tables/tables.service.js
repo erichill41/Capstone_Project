@@ -58,23 +58,15 @@ function list() {
 }
 
 async function updateSeatRes(reservation_id, table_id) {
-  const trx = await knex.transaction();
-  return trx("reservations")
-    .where({ reservation_id })
-    .update({ status: "Seated" })
-    .then(() => 
-      trx("tables")
-        .where({ table_id })
-        .update({ reservation_id: reservation_id }))
-    .then(trx.commit)
-    .catch(trx.rollback);
-}
-
-async function destroyTableReservation(table_id) {
   return knex("tables")
     .where({ table_id })
-    .update({ reservation_id: null })
-    .returning('*');
+    .update({ reservation_id: reservation_id }, "*");
+}
+
+function destroyTableReservation(table_id) {
+  return knex("tables")
+    .where({ table_id })
+    .update({ reservation_id: null }, "*")
 }
 
 module.exports = {

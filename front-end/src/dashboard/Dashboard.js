@@ -10,10 +10,9 @@ function Dashboard({ date }) {
 
   const [reservations, setReservations] = useState([]);
   const [currentDate, setCurrentDate] = useState(date);
-  const [reservationsError, setReservationsError] = useState(null);
 
   const [tables, setTables] = useState([]);
-  const [tablesError, setTablesError] = useState(null);
+  const [error, setError] = useState(null);
   
   const history = useHistory();
   const location = useLocation();
@@ -36,32 +35,35 @@ function Dashboard({ date }) {
 
   useEffect(() => {
     const abortController = new AbortController();
-    setReservationsError(null);
+    setError(null);
     if (currentDate === date) {
       listReservations({ date }, abortController.signal)
       .then(setReservations)
-      .catch(setReservationsError);
+      .catch(setError);
     } else {
       listReservations({ currentDate }, abortController.signal)
       .then(setReservations)
-      .catch(setReservationsError);
-    }
-    if (searchedDate && searchedDate !== '') {
-      setCurrentDate(searchedDate);
+      .catch(setError);
     }
     
     return () => abortController.abort();
-  },[date, currentDate, location.search, searchedDate]);
+  },[]);
 
   useEffect(() => {
     const abortController = new AbortController();
-    setTablesError(null);
+    setError(null);
     listTables()
       .then(setTables)
-      .catch(setTablesError);
+      .catch(setError);
 
     return () => abortController.abort();
   }, []);
+
+  useEffect(() => {
+    if (searchedDate && searchedDate !== '') {
+      setCurrentDate(searchedDate);
+    }
+  }, [searchedDate]);
 
 // change day handlers
 
@@ -84,7 +86,7 @@ function Dashboard({ date }) {
   }
 
 
-
+console.log(reservations);
   // console.log('TABLES', tables);
   // console.log('CLEAR TABLES', clearTableToggler);
   
@@ -111,7 +113,7 @@ function Dashboard({ date }) {
           </div>
         </div>
 
-        <ErrorAlert error={reservationsError} />
+        <ErrorAlert error={error} />
         <div>
           <h4> Reservation List </h4>
           <table className="table table-striped">
@@ -137,7 +139,6 @@ function Dashboard({ date }) {
          </table>
         </div>
 
-        <ErrorAlert error={tablesError} />
         <div>
           <h4> Tables List </h4>
           <table className="table table-striped">

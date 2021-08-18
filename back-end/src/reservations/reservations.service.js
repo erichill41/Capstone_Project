@@ -2,7 +2,9 @@ const { KnexTimeoutError } = require('knex');
 const knex = require('../db/connection');
 
 function list() {
-  return knex('reservations').select('*');
+  return knex('reservations')
+    .select('*')
+    .whereNot({ status: "finished" });
 }
 
 function listByDate(reservation_date) {
@@ -33,10 +35,17 @@ function create(newReservation) {
     .then((result) => result[0]);
 }
 
+async function updateStatus(reservation_id, status) {
+  return knex('reservations')
+    .where({ reservation_id })
+    .update({status: status }, '*')
+}
+
 module.exports = {
   list,
   listByDate,
   listByPhone,
   read,
   create,
+  updateStatus,
 }

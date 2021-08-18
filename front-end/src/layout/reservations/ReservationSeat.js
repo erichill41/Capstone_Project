@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { listReservations, listTables, updateSeat } from "../../utils/api";
+import { listReservations, listTables, seatReservation, updateSeat } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
 function ReservationSeat() {
@@ -41,6 +41,7 @@ function ReservationSeat() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const tableObj = JSON.parse(tableFormData);
+    seatReservation(reservation_id)
     updateSeat(tableObj.table_id, reservation_id)
     .then((response) => {
       const newTables = tables.map((table) => {

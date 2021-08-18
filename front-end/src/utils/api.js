@@ -138,12 +138,34 @@ export async function updateSeat(table_id, reservation_id, signal) {
  *  updated table with open status and no reservation id
  */
 
-export async function deleteTableReservation(table_id, reservation_id, signal) {
+export async function deleteTableReservation(table_id, signal) {
   const url =`${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
     headers,
-    body: JSON.stringify({ data: { reservation_id }}),
+    body: JSON.stringify({ data: { table_id }}),
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
+export async function seatReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { status: "seated" }}),
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
+export async function finishReservation(reservation_id, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: { status: "finished" }}),
     signal,
   };
   return await fetchJson(url, options);

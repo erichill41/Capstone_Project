@@ -1,5 +1,6 @@
 const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
+const { as } = require('../db/connection');
 
 // Validation Middleware
 async function reservationExists(req, res, next) {
@@ -192,6 +193,27 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+
+// TODO finish update status functionality
+/* 
+check reservation exists
+update reservation status where reservation_id matches
+return all columns
+
+*/
+async function updateStatus(req, res) {
+  const status = req.body.data.status;
+  console.log("STATUS", status)
+  console.log("REQ.PARAMS", req.params)
+  console.log("RESERVATION", res.locals.reservation)
+
+  const reservation = res.locals.reservation;
+  const {reservation_id} = reservation;
+  
+  const data = await service.updateStatus(reservation_id, status);
+  res.json({ data })
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -210,4 +232,8 @@ module.exports = {
     asyncErrorBoundary(create)
   ],
   read: [asyncErrorBoundary(reservationExists), read],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists), 
+    asyncErrorBoundary(updateStatus),
+  ]
 };

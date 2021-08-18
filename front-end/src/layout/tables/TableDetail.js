@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deleteTableReservation } from "../../utils/api";
+import { deleteTableReservation, finishReservation } from "../../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert";
 
@@ -12,23 +12,25 @@ function TableDetail({ table, reservations }) {
   // useEffect for table status: free or occupied
   
   useEffect(() => {
-    if (currentTable.reservation_id) {
+    if (currentTable.reservation_id !== null) {
       setTableStatus(`occupied`)
     } else {
       setTableStatus("free")
     }
-  }, [currentTable])
+  }, [currentTable, reservations])
 
   const handleClear = (event) => {
     event.preventDefault();
     setError(null);
     if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
-      deleteTableReservation(currentTable.table_id, currentTable.reservation_id)
+      finishReservation(currentTable.reservation_id)
+      deleteTableReservation(currentTable.table_id)
       .then((response) => {
+        console.log(response)
         setCurrentTable(response[0])
-        history.push('/tables')
-        setTableStatus("free");
+        setTableStatus("free")
       })
+      .then(() => history.push('/tables'))
       .catch(setError);
     }
   }
@@ -46,7 +48,7 @@ function TableDetail({ table, reservations }) {
           {tableStatus.includes('occupied') ?
           <button className="btn btn-danger" onClick={handleClear}> Finish </button>
           : 
-          <div></div>
+          <></>
           }
         </td>
       </tr>

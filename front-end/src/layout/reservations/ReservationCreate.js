@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { createReservation } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
-function ReservationCreate() {
+function ReservationCreate({ date }) {
 
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -12,10 +12,10 @@ function ReservationCreate() {
     first_name: "",
     last_name: "",
     mobile_number: "",
-    reservation_date: "",
+    reservation_date: date,
     reservation_time: "",
     people: 1,
-    status: "Booked",
+    status: "booked",
   })
 
   // TODO Create Change Handler √
@@ -34,7 +34,7 @@ function ReservationCreate() {
 
     createReservation({
       ...reservation,
-      "status": "Booked",
+      "status": "booked",
     })
       .then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`);

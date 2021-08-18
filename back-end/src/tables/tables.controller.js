@@ -167,16 +167,13 @@ async function create(req, res) {
 }
 
 async function updateSeatRes(req, res) {
-  const { reservation_id } = req.body.data;
-  const { table_id } = req.params;
-  //console.log('TABLE_ID', table_id);
-  const data = await service.updateSeatRes(reservation_id, table_id);
+  const { reservation, table } = res.locals;
+  const data = await service.updateSeatRes(reservation.reservation_id, table.table_id);
   res.json({ data })
 }
 
 async function destroy(req, res) {
   const { table_id } = req.params;
-  // const { reservation_id } = req.body.data;
   const data = await service.destroyTableReservation(table_id);
   console.log(data);
   res.status(200).json({ data });
