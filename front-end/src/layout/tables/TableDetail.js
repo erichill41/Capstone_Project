@@ -1,36 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { deleteTableReservation, finishReservation } from "../../utils/api";
+import React, { useState } from "react";
+import { deleteTableReservation, updateResStatus } from "../../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert";
 
-function TableDetail({ table, reservations }) {
+function TableDetail({ table }) {
   const [currentTable, setCurrentTable] = useState(table);
-  const [tableStatus, setTableStatus] = useState("free");
   const history = useHistory();
   const [error, setError] = useState(null);
 
-  // useEffect for table status: free or occupied
-  
-  useEffect(() => {
-    if (currentTable.reservation_id !== null) {
-      setTableStatus(`occupied`)
-    } else {
-      setTableStatus("free")
-    }
-  }, [currentTable, reservations])
+  console.log(currentTable);
 
   const handleClear = (event) => {
     event.preventDefault();
     setError(null);
     if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
-      finishReservation(currentTable.reservation_id)
+      updateResStatus({status: "finished"}, currentTable.reservation_id)
       deleteTableReservation(currentTable.table_id)
       .then((response) => {
-        console.log(response)
-        setCurrentTable(response[0])
-        setTableStatus("free")
+        console.log(response.result)
+        setCurrentTable(response.result)
+        history.push('/tables');
       })
-      .then(() => history.push('/tables'))
       .catch(setError);
     }
   }
@@ -43,9 +33,9 @@ function TableDetail({ table, reservations }) {
         <td> {currentTable.table_name} </td>
         <td> {currentTable.capacity} </td>
         <td> {currentTable.reservation_id} </td>
-        <td data-table-id-status={`${currentTable.table_id}`}> {tableStatus} </td>
-        <td data-table-id-finish={currentTable.table_id}>
-          {tableStatus.includes('occupied') ?
+        <td data-table-id-status={`${currentTable.table_id}`}> {currentTable.table_status} </td>
+        <td data-table-id-finish={`${currentTable.table_id}`}>
+          {currentTable.table_status === "occupied" ?
           <button className="btn btn-danger" onClick={handleClear}> Finish </button>
           : 
           <></>

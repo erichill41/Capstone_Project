@@ -15,7 +15,6 @@ function ReservationCreate({ date }) {
     reservation_date: date,
     reservation_time: "",
     people: 1,
-    status: "booked",
   })
 
   // TODO Create Change Handler √
@@ -32,10 +31,7 @@ function ReservationCreate({ date }) {
 
     console.log(reservation);
 
-    createReservation({
-      ...reservation,
-      "status": "booked",
-    })
+    createReservation(reservation)
       .then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`);
       })

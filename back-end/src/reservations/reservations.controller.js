@@ -1,6 +1,5 @@
 const service = require('./reservations.service');
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
-const { as } = require('../db/connection');
 
 // Validation Middleware
 async function reservationExists(req, res, next) {
@@ -45,6 +44,17 @@ function hasLastName(req, res, next) {
   next({
     status: 400,
     message: "last_name property required",
+  })
+}
+
+function validStatus(req, res, next) {
+  const status = req.body.data.status;
+  if (status !== 'seated' && status !== 'finished') {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "status cannot be seated, finished.",
   })
 }
 
@@ -160,6 +170,30 @@ function hasValidPeople(req, res, next) {
   })
 }
 
+function updateValidStatus(req, res, next) {
+  const status = req.body.data.status;
+  if (status !== 'unknown') {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "status cannot be unknown.",
+  })
+}
+
+function notFinished(req, res, next) {
+  const reservation = res.locals.reservation;
+  console.log(reservation);
+  if (reservation.status === 'finished') {
+    next({
+      status: 400,
+      message: "reservation cannot already be finished.",
+    })  
+  } else {
+    return next();
+  }
+}
+
 
 /**
  * List handler for reservation resources
@@ -188,7 +222,7 @@ function read(req, res) {
 
 async function create(req, res) {
   const newReservation = req.body.data;
-  console.log(newReservation);
+  // console.log(newReservation);
   const data = await service.create(newReservation);
   res.status(201).json({ data });
 }
@@ -210,8 +244,9 @@ async function updateStatus(req, res) {
   const reservation = res.locals.reservation;
   const {reservation_id} = reservation;
   
-  const data = await service.updateStatus(reservation_id, status);
-  res.json({ data })
+  let result = await service.updateStatus(reservation_id, status);
+  result = result[0];
+  res.status(200).json({ data: { status: result.status } })
 }
 
 module.exports = {
@@ -223,6 +258,7 @@ module.exports = {
     hasMobileNumber, 
     hasReservationDate,
     validDate,
+    validStatus,
     noTuesday,
     noPastReservations,
     hasReservationTime,
@@ -234,6 +270,8 @@ module.exports = {
   read: [asyncErrorBoundary(reservationExists), read],
   updateStatus: [
     asyncErrorBoundary(reservationExists), 
+    notFinished,
+    updateValidStatus,
     asyncErrorBoundary(updateStatus),
   ]
 };

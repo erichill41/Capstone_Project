@@ -30,7 +30,10 @@ function read(reservation_id) {
 
 function create(newReservation) {
   return knex('reservations')
-    .insert(newReservation)
+    .insert({
+      ...newReservation,
+      "status": "booked",
+    })
     .returning('*')
     .then((result) => result[0]);
 }

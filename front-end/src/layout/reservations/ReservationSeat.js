@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { listReservations, listTables, seatReservation, updateSeat } from "../../utils/api";
+import { listReservations, listTables, updateSeat } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
 function ReservationSeat() {
   const history = useHistory();
   const {reservation_id} = useParams();
 
-  const [reservationsError, setReservationsError] = useState(null);
   const [reservations, setReservations] = useState([]);
-
   const [tables, setTables] = useState([]);
-  const [tablesError, setTablesError] = useState(null);
-  
+
   const [tableFormData, setTableFormData] = useState({});
-  const [seatError, setSeatError] = useState(null);
+  const [error, setError] = useState(null);
 
   function loadReservations() {
     const abortController = new AbortController();
-    setReservationsError(null);
+    setError(null);
     return listReservations(abortController.signal)
       .then(setReservations)
-      .catch(setReservationsError)
+      .catch(setError)
   }
 
   function loadTables() {
     const abortController = new AbortController();
-    setTablesError(null);
+    setError(null);
     return listTables(abortController.signal)
       .then(setTables)
-      .catch(setTablesError);
+      .catch(setError);
   }
 
   useEffect(loadTables, []);
@@ -41,7 +38,6 @@ function ReservationSeat() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const tableObj = JSON.parse(tableFormData);
-    seatReservation(reservation_id)
     updateSeat(tableObj.table_id, reservation_id)
     .then((response) => {
       const newTables = tables.map((table) => {
@@ -50,7 +46,7 @@ function ReservationSeat() {
       setTables(newTables);
       history.push('/dashboard')
     })
-    .catch(setSeatError);
+    .catch(setError);
     }
 
   if (tables) {
@@ -59,9 +55,9 @@ function ReservationSeat() {
         <div className="mb-3">
           <h1> Seat The Current Reservation </h1>
         </div>
-        <ErrorAlert error={reservationsError} />
-        <ErrorAlert error={tablesError} />
-        <ErrorAlert error={seatError} />
+        
+        <ErrorAlert error={error} />
+
         <div className="mb-3">
           <h3> Current Reservation: {reservation_id} </h3>
         </div>

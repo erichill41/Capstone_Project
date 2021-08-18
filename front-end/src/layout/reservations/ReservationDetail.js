@@ -27,7 +27,7 @@ function ReservationDetail({ reservation }) {
           <td> {currentReservation.mobile_number} </td>
           <td> {currentReservation.reservation_date} </td>
           <td> {currentReservation.reservation_time} </td>
-          <td data-reservation-id-status={reservation.reservation_id}> {currentReservation.status} </td>
+          <td data-reservation-id-status={currentReservation.reservation_id}> {currentReservation.status} </td>
           <td>
             {currentReservation.status === 'booked' ? 
             <a            

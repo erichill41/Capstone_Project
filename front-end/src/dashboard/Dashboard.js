@@ -6,6 +6,7 @@ import { useLocation, useHistory } from "react-router-dom";
 import ReservationDetail from "../layout/reservations/ReservationDetail";
 import TableDetail from "../layout/tables/TableDetail";
 
+
 function Dashboard({ date }) {
 
   const [reservations, setReservations] = useState([]);
@@ -47,7 +48,7 @@ function Dashboard({ date }) {
     }
     
     return () => abortController.abort();
-  },[]);
+  },[date, currentDate]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -152,7 +153,7 @@ console.log(reservations);
                 {clearTableToggler.length ? 
                   <th scope="col"> Clear Tables </th>
                   : 
-                  <div></div>}
+                  <></>}
                </tr>
              </thead>
             <tbody>

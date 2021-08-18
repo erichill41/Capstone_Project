@@ -173,10 +173,12 @@ async function updateSeatRes(req, res) {
 }
 
 async function destroy(req, res) {
-  const { table_id } = req.params;
-  const data = await service.destroyTableReservation(table_id);
-  console.log(data);
-  res.status(200).json({ data });
+  const table = res.locals.table;
+  console.log(table);
+  let result = await service.destroyTableRes(table.table_id, table.reservation_id);
+  result = result[0];
+  console.log('RESULT', result);
+  res.status(200).json({ data: { result } });
 }
 
 module.exports = {
