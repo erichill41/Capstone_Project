@@ -48,7 +48,7 @@ function Dashboard({ date }) {
     }
     
     return () => abortController.abort();
-  },[date, currentDate]);
+  },[date, currentDate, history.location]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -58,7 +58,7 @@ function Dashboard({ date }) {
       .catch(setError);
 
     return () => abortController.abort();
-  }, []);
+  }, [history.location]);
 
   useEffect(() => {
     if (searchedDate && searchedDate !== '') {
@@ -125,11 +125,12 @@ console.log(reservations);
                 <th scope="col"> Last Name </th>
                 <th scope="col"> Party Size </th>
                 <th scope="col"> Phone Number </th>
-                <th scope="col"> Reservation Date </th>
+                {/* <th scope="col"> Reservation Date </th> */}
                 <th scope="col"> Reservation Time </th>
                 <th scope="col"> Reservation Status </th>
                 <th scope="col"> Seat Reservation </th>
                 <th scope="col"> Edit Reservation </th>
+                <th scope="col"> Cancel Reservation </th>
                </tr>
              </thead>
             <tbody>

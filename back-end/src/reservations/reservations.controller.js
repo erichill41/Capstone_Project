@@ -145,7 +145,6 @@ function validTime(req, res, next) {
 
 function reservationDuringHours(req, res, next) {
   const time = req.body.data.reservation_time;
-  console.log(time);
   const open = "10:30";
   const close = "21:30";
   if (time >= open && time <= close) {
@@ -160,7 +159,6 @@ function reservationDuringHours(req, res, next) {
 function hasValidPeople(req, res, next) {
   const people = req.body.data.people;
   const valid = Number(people);
-  console.log(valid, typeof valid);
   if (people > 0 && typeof valid === 'number') {
     return next();
   }
@@ -183,7 +181,6 @@ function updateValidStatus(req, res, next) {
 
 function notFinished(req, res, next) {
   const reservation = res.locals.reservation;
-  console.log(reservation);
   if (reservation.status === 'finished') {
     next({
       status: 400,
@@ -202,6 +199,7 @@ async function list(req, res) {
   const { date, currentDate, mobile_number } = req.query;
   if (date) {
     const data = await service.listByDate(date);
+    console.log('RES LIST FUNCTION DATA', data);
     res.json({ data });
   } else if (currentDate) {
     const data = await service.listByDate(currentDate);
@@ -221,25 +219,16 @@ function read(req, res) {
 }
 
 async function create(req, res) {
-  const newReservation = req.body.data;
-  // console.log(newReservation);
-  const data = await service.create(newReservation);
+  const reservation = req.body.data;
+  const data = await service.create(reservation);
   res.status(201).json({ data });
 }
 
-
-// TODO finish update status functionality
-/* 
-check reservation exists
-update reservation status where reservation_id matches
-return all columns
-
-*/
 async function updateStatus(req, res) {
   const status = req.body.data.status;
-  console.log("STATUS", status)
-  console.log("REQ.PARAMS", req.params)
-  console.log("RESERVATION", res.locals.reservation)
+  // console.log("STATUS", status)
+  // console.log("REQ.PARAMS", req.params)
+  // console.log("RESERVATION", res.locals.reservation)
 
   const reservation = res.locals.reservation;
   const {reservation_id} = reservation;

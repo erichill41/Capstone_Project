@@ -26,11 +26,9 @@ function ReservationCreate({ date }) {
   }
 
   // TODO Create Submit Handler √
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
-
     console.log(reservation);
-
     createReservation(reservation)
       .then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`);
@@ -39,7 +37,7 @@ function ReservationCreate({ date }) {
   }
 
   return (
-    <main>
+    <>
       <h1> Create A Reservation </h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit} className="form-group">
@@ -144,7 +142,7 @@ function ReservationCreate({ date }) {
         <button type="button" onClick={() => history.goBack()} className="btn btn-secondary mr-2"> Cancel </button>
         <button type="submit" className="btn btn-primary"> Submit Reservation </button>
       </form>
-    </main>
+    </>
   );
 }
 

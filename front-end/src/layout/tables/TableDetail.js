@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { deleteTableReservation, updateResStatus } from "../../utils/api";
+import { deleteTableReservation, listTables, updateResStatus } from "../../utils/api";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../ErrorAlert";
 
@@ -15,13 +15,18 @@ function TableDetail({ table }) {
     setError(null);
     if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
       updateResStatus({status: "finished"}, currentTable.reservation_id)
-      deleteTableReservation(currentTable.table_id)
-      .then((response) => {
-        console.log(response.result)
-        setCurrentTable(response.result)
-        history.push('/tables');
-      })
-      .catch(setError);
+        .then(() => deleteTableReservation(currentTable.table_id))
+        .then(() => {
+          setCurrentTable({
+            ...table,
+            reservation_id: null,
+            table_status: "free",
+          })
+          listTables()
+          history.push('/tables')
+        })
+        .catch(setError)
+      
     }
   }
 
@@ -33,9 +38,9 @@ function TableDetail({ table }) {
         <td> {currentTable.table_name} </td>
         <td> {currentTable.capacity} </td>
         <td> {currentTable.reservation_id} </td>
-        <td data-table-id-status={`${currentTable.table_id}`}> {currentTable.table_status} </td>
-        <td data-table-id-finish={`${currentTable.table_id}`}>
-          {currentTable.table_status === "occupied" ?
+        <td data-table-id-status={`${table.table_id}`}> {currentTable.table_status} </td>
+        <td data-table-id-finish={`${table.table_id}`}>
+          {currentTable.reservation_id ?
           <button className="btn btn-danger" onClick={handleClear}> Finish </button>
           : 
           <></>

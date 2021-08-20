@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { seatReservation } from "../../utils/api";
 // import { useHistory } from "react-router-dom";
 
 
@@ -11,10 +10,13 @@ function ReservationDetail({ reservation }) {
   useEffect(() => {
     setCurrentReservation(reservation);
   }, [reservation])
-  
-  // const editHandler = (event) => {
 
-  // }
+  const handleCancel = (event) => {
+    event.preventDefault();
+    // window confirm
+    // set reservation status to cancelled
+    // PUT to reservation status
+  }
   
   if (currentReservation.status !== "finished") {
     return (
@@ -25,7 +27,7 @@ function ReservationDetail({ reservation }) {
           <td> {currentReservation.last_name} </td>
           <td> {currentReservation.people} </td>
           <td> {currentReservation.mobile_number} </td>
-          <td> {currentReservation.reservation_date} </td>
+          {/* <td> {currentReservation.reservation_date} </td> */}
           <td> {currentReservation.reservation_time} </td>
           <td data-reservation-id-status={currentReservation.reservation_id}> {currentReservation.status} </td>
           <td>
@@ -40,7 +42,19 @@ function ReservationDetail({ reservation }) {
           </td>
           <td>
             {currentReservation.status === 'booked' ?
-              <button className="btn btn-primary "> TODO Edit </button>
+            <a href={`/reservations/${currentReservation.reservation_id}/edit`}>
+              <button className="btn btn-primary "> Edit </button>
+            </a>
+            :
+            <></>
+            }
+          </td><td>
+            {currentReservation.status === 'booked' ?
+            <button
+              className="btn btn-primary"
+              data-reservation-id-cancel={currentReservation.reservation_id}
+              onClick={handleCancel}
+            > Cancel </button>
             :
             <></>
             }

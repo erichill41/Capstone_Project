@@ -73,8 +73,6 @@ function validTableCapacity(req, res, next) {
 
 async function tableExists(req, res, next) {
   const table_id = req.params.table_id;
-  
-  // console.log('TABLE ID', table_id);
   const table = await service.readTable(table_id);
   if (table) {
     res.locals.table = table;
@@ -87,9 +85,7 @@ async function tableExists(req, res, next) {
 }
 
 async function reservationExists(req, res, next) {
-  const reservation_id = req.body.data.reservation_id;
-  // console.log(reservation_id)
-  const reservation = await service.readReservation(reservation_id);
+  const reservation = await service.readReservation(req.body.data.reservation_id);
   if (reservation) {
     res.locals.reservation = reservation;
     return next();
@@ -101,8 +97,7 @@ async function reservationExists(req, res, next) {
 }
 
 async function reservationSeated(req, res, next) {
-  const { reservation_id } = req.body.data;
-  const seated = await service.readTableByRes(reservation_id);
+  const seated = await service.readTableByRes(req.body.data.reservation_id);
   if (!seated) {
     return next();
   }
@@ -126,7 +121,7 @@ function tableOpen(req, res, next) {
 
 function tableNotOpen(req, res, next) {
   const table = res.locals.table;
-  if (table.reservation_id) {
+  if (table.table_status === 'occupied') {
     return next();
   }
   next({
@@ -136,9 +131,7 @@ function tableNotOpen(req, res, next) {
 }
 
 async function hasEnoughSeats(req, res, next) {
-  const table = res.locals.table;
-  const reservation = res.locals.reservation;
-  // console.log(reservation, table);
+  const { reservation, table } = res.locals;
   if (reservation.people > table.capacity) {
     next({
       status: 400,
@@ -175,10 +168,8 @@ async function updateSeatRes(req, res) {
 async function destroy(req, res) {
   const table = res.locals.table;
   console.log(table);
-  let result = await service.destroyTableRes(table.table_id, table.reservation_id);
-  result = result[0];
-  console.log('RESULT', result);
-  res.status(200).json({ data: { result } });
+  await service.destroyTableRes(table.table_id, table.reservation_id);
+  res.json('');
 }
 
 module.exports = {

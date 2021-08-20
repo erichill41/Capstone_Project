@@ -1,38 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { listReservations, listTables, updateSeat } from "../../utils/api";
+import { listTables, updateSeat } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
 function ReservationSeat() {
   const history = useHistory();
   const {reservation_id} = useParams();
 
-  const [reservations, setReservations] = useState([]);
+  
   const [tables, setTables] = useState([]);
 
   const [tableFormData, setTableFormData] = useState({});
   const [error, setError] = useState(null);
 
-  function loadReservations() {
+  
+  useEffect(() => {
     const abortController = new AbortController();
     setError(null);
-    return listReservations(abortController.signal)
-      .then(setReservations)
-      .catch(setError)
-  }
-
-  function loadTables() {
-    const abortController = new AbortController();
-    setError(null);
-    return listTables(abortController.signal)
+    listTables()
       .then(setTables)
       .catch(setError);
-  }
 
-  useEffect(loadTables, []);
-  useEffect(loadReservations, []);
+    return () => abortController.abort();
+  }, []);
   
-  console.log(reservations);
+  console.log(reservation_id, tables);
   
 
   const handleSubmit = (event) => {
@@ -43,7 +35,7 @@ function ReservationSeat() {
       const newTables = tables.map((table) => {
         return table.table_id === response.table_id ? response : table
       })
-      setTables(newTables);
+      setTables(newTables)
       history.push('/dashboard')
     })
     .catch(setError);
@@ -51,7 +43,7 @@ function ReservationSeat() {
 
   if (tables) {
     return (
-      <main> 
+      <> 
         <div className="mb-3">
           <h1> Seat The Current Reservation </h1>
         </div>
@@ -86,7 +78,7 @@ function ReservationSeat() {
           <button type="button" onClick={() => history.goBack()} className="btn btn-secondary mr-2"> Cancel </button>
           <button className="btn btn-primary" type="submit"> Submit </button>
         </form>
-      </main>
+      </>
     );
   } else {
     return (

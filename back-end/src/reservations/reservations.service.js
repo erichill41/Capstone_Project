@@ -4,13 +4,15 @@ const knex = require('../db/connection');
 function list() {
   return knex('reservations')
     .select('*')
-    .whereNot({ status: "finished" });
+    .whereNot({ status: "finished" })
+    .orderBy('reservation_time');
 }
 
 function listByDate(reservation_date) {
   return knex('reservations')
     .select('*')
     .where({ reservation_date })
+    .whereNot({ status: "finished" })
     .orderBy('reservation_time')
 }
 
@@ -18,6 +20,7 @@ function listByPhone(mobile_number) {
   return knex('reservations')
     .select('*')
     .where({ mobile_number })
+    .whereNot({ status: "finished" })
     .orderBy('reservation_time')
 }
 
