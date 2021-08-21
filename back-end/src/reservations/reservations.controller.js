@@ -16,6 +16,7 @@ async function reservationExists(req, res, next) {
 }
 
 function hasData(req, res, next) {
+  console.log("DATA", req.body.data);
   if (req.body.data) {
     return next();
   }
@@ -23,7 +24,7 @@ function hasData(req, res, next) {
     status: 400,
     message: "Body must have data property."
   })
-}
+}   
 
 function hasFirstName(req, res, next) {
   const name = req.body.data.first_name;
@@ -32,7 +33,7 @@ function hasFirstName(req, res, next) {
   }
   next({
     status: 400,
-    message: "first_name property required",
+    message: "first_name property required.",
   })
 }
 
@@ -43,7 +44,7 @@ function hasLastName(req, res, next) {
   }
   next({
     status: 400,
-    message: "last_name property required",
+    message: "last_name property required.",
   })
 }
 
@@ -65,7 +66,7 @@ function hasMobileNumber(req, res, next) {
   }
   next({
     status: 400,
-    message: "mobile_number property required",
+    message: "mobile_number property required.",
   })
 }
 
@@ -76,7 +77,7 @@ function hasReservationDate(req, res, next) {
   }
   next({
     status: 400,
-    message: "reservation_date property required",
+    message: "reservation_date property required.",
   })
 }
 
@@ -89,7 +90,7 @@ function validDate(req, res, next) {
   }
   next({
     status: 400,
-    message: "reservation_date must be valid date",
+    message: "reservation_date must be valid date.",
   })
 }
 
@@ -126,7 +127,7 @@ function hasReservationTime(req, res, next) {
   }
   next({
     status: 400,
-    message: "valid reservation_time property required",
+    message: "valid reservation_time property required.",
   })
 }
 
@@ -139,7 +140,7 @@ function validTime(req, res, next) {
   }
   next({
     status: 400,
-    message: "reservation_time must be valid time",
+    message: "reservation_time must be valid time.",
   })
 }
 
@@ -158,14 +159,14 @@ function reservationDuringHours(req, res, next) {
 
 function hasValidPeople(req, res, next) {
   const people = req.body.data.people;
-  const valid = Number(people);
-  if (people > 0 && typeof valid === 'number') {
-    return next();
+  if (typeof people !== 'number' || people < 1) {
+    next({
+      status: 400,
+      message: "valid people property required.",
+    })
   }
-  next({
-    status: 400,
-    message: "valid people property required"
-  })
+  return next();
+  
 }
 
 function updateValidStatus(req, res, next) {
@@ -224,18 +225,20 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function updateReservation(req, res) {
+  const reservation = req.body.data;
+  console.log(reservation);
+  const newRes = await service.updateReservation(reservation);
+  const result = newRes[0];
+  console.log(result);
+  res.status(200).json({ data: result });
+}
+
 async function updateStatus(req, res) {
   const status = req.body.data.status;
-  // console.log("STATUS", status)
-  // console.log("REQ.PARAMS", req.params)
-  // console.log("RESERVATION", res.locals.reservation)
-
   const reservation = res.locals.reservation;
-  const {reservation_id} = reservation;
-  
-  let result = await service.updateStatus(reservation_id, status);
-  result = result[0];
-  res.status(200).json({ data: { status: result.status } })
+  let result = await service.updateStatus(reservation.reservation_id, status);
+  res.status(200).json({ data: { status: result[0].status } })
 }
 
 module.exports = {
@@ -249,12 +252,27 @@ module.exports = {
     validDate,
     validStatus,
     noTuesday,
+    hasReservationTime,
+    validTime,
+    reservationDuringHours,
     noPastReservations,
+    hasValidPeople, 
+    asyncErrorBoundary(create)
+  ],
+  updateReservation: [
+    asyncErrorBoundary(reservationExists),
+    hasFirstName,
+    hasLastName, 
+    hasMobileNumber, 
+    hasReservationDate,
+    validDate,
+    validStatus,
+    noTuesday,
     hasReservationTime,
     validTime,
     reservationDuringHours,
     hasValidPeople, 
-    asyncErrorBoundary(create)
+    asyncErrorBoundary(updateReservation),
   ],
   read: [asyncErrorBoundary(reservationExists), read],
   updateStatus: [

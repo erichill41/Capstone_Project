@@ -1,6 +1,6 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const e = require("express");
+
 
 
 // ---- VALIDATION MIDDLEWARE ----
@@ -92,7 +92,7 @@ async function reservationExists(req, res, next) {
   }
   next({
     status: 404,
-    message: `reservation_id ${reservation_id} does not exist`,
+    message: `reservation_id ${req.body.data.reservation_id} does not exist`,
   })
 }
 
