@@ -26,6 +26,10 @@ function ReservationEdit() {
       [target.name]: target.value,
     })
   }
+
+  const handleCancel = (event) => {
+
+  }
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -144,6 +148,11 @@ function ReservationEdit() {
         </div>
         <button type="button" className="btn btn-secondary mr-2" onClick={() => history.goBack()}> Cancel </button>
         <button type="submit" className="btn btn-primary"> Submit Edit </button>
+        <button
+          className="btn btn-danger ml-2"
+          data-reservation-id-cancel={currentReservation.reservation_id}
+          onClick={handleCancel}
+          > Cancel Reservation </button>
       </form>
     </>
   )

@@ -12,13 +12,6 @@ function ReservationDetail({ reservation }) {
   useEffect(() => {
     setCurrentReservation(reservation);
   }, [reservation])
-
-  const handleCancel = (event) => {
-    event.preventDefault();
-    // window confirm
-    // set reservation status to cancelled
-    // PUT to reservation status
-  }
   
   if (currentReservation.status !== "finished") {
     return (
@@ -47,16 +40,6 @@ function ReservationDetail({ reservation }) {
             <a href={`/reservations/${currentReservation.reservation_id}/edit`}>
               <button className="btn btn-primary "> Edit </button>
             </a>
-            :
-            <></>
-            }
-          </td><td>
-            {currentReservation.status === 'booked' ?
-            <button
-              className="btn btn-primary"
-              data-reservation-id-cancel={currentReservation.reservation_id}
-              onClick={handleCancel}
-            > Cancel </button>
             :
             <></>
             }
