@@ -22,8 +22,7 @@ function ReservationCreate({ date }) {
     console.log(target, target.value);
     setReservation({
       ...reservation,
-      [target.name]:
-        target.name === "people" ? Number(target.value) : target.value,
+      [target.name]: target.value,
     });
   }
 
@@ -31,7 +30,10 @@ function ReservationCreate({ date }) {
   function handleSubmit(event) {
     event.preventDefault();
     console.log(reservation);
-    createReservation(reservation)
+    createReservation({
+      ...reservation,
+      people: Number(reservation.people),
+    })
       .then(() => {
         history.push(`/dashboard?date=${reservation.reservation_date}`);
       })

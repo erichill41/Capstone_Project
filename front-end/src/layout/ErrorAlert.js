@@ -12,9 +12,7 @@ function ErrorAlert({ error }) {
   return (
     error && (
       <>
-      <tr> 
-        <th className="alert alert-danger m-2"> Error: {error.message} </th>
-      </tr>
+        <p className="alert alert-danger m-2"> Error: {error.message} </p>
       </>
     )
   );
