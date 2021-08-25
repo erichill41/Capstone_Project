@@ -125,7 +125,7 @@ console.log(reservations);
                 <th scope="col"> Last Name </th>
                 <th scope="col"> Party Size </th>
                 <th scope="col"> Phone Number </th>
-                {/* <th scope="col"> Reservation Date </th> */}
+                <th scope="col"> Reservation Date </th>
                 <th scope="col"> Reservation Time </th>
                 <th scope="col"> Reservation Status </th>
                 <th scope="col"> Seat Reservation </th>
@@ -134,7 +134,7 @@ console.log(reservations);
                </tr>
              </thead>
             <tbody>
-              {reservations && reservations.map((res) => (
+              {reservations.map((res) => (
                 <ReservationDetail reservation={res} key={res.reservation_id}/>
               ))}
             </tbody>
@@ -158,7 +158,7 @@ console.log(reservations);
                </tr>
              </thead>
             <tbody>
-              {tables && tables.map((table) => (
+              {tables.map((table) => (
                 <TableDetail table={table} reservations={reservations} key={table.table_id}/>
               ))}
             </tbody>

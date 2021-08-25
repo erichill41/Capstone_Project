@@ -159,14 +159,14 @@ function reservationDuringHours(req, res, next) {
 
 function hasValidPeople(req, res, next) {
   const people = req.body.data.people;
-  if (typeof people !== 'number' || people < 1) {
-    next({
-      status: 400,
-      message: "valid people property required.",
-    })
-  }
-  return next();
   
+  if (people > 0 && typeof people === 'number') {
+    return next();
+  }
+  next({
+    status: 400,
+    message: "valid people property required"
+  })
 }
 
 function updateValidStatus(req, res, next) {

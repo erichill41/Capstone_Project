@@ -31,7 +31,7 @@ function ReservationEdit() {
     event.preventDefault();
     updateReservation(currentReservation)
     .catch(setError)
-    // history.goBack();
+    history.goBack();
   }
 
   return (

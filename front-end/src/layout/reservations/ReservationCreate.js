@@ -14,15 +14,17 @@ function ReservationCreate({ date }) {
     mobile_number: "",
     reservation_date: date,
     reservation_time: "",
-    people: 1,
+    people: "1",
   })
 
   // TODO Create Change Handler √
   const handleChange = ({ target }) => {
+    console.log(target, target.value);
     setReservation({
       ...reservation,
-      [target.name]: target.value,
-    })
+      [target.name]:
+        target.name === "people" ? Number(target.value) : target.value,
+    });
   }
 
   // TODO Create Submit Handler √
