@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 
 
 
 function ReservationDetail({ reservation }) {
   const [currentReservation, setCurrentReservation] = useState(reservation);
   // const history = useHistory();
+  const reservation_id = useParams();
 
   useEffect(() => {
     setCurrentReservation(reservation);
@@ -33,7 +35,7 @@ function ReservationDetail({ reservation }) {
           <td>
             {currentReservation.status === 'booked' ? 
             <a            
-              href={`/reservations/${currentReservation.reservation_id}/seat`}>
+              href={`/reservations/${reservation_id}/seat`}>
               <button className="btn btn-primary"> Seat </button>
             </a> 
             :

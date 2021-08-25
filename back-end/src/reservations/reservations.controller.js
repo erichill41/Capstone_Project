@@ -16,7 +16,7 @@ async function reservationExists(req, res, next) {
 }
 
 function hasData(req, res, next) {
-  console.log("DATA", req.body.data);
+  // console.log("DATA", req.body.data);
   if (req.body.data) {
     return next();
   }
@@ -200,7 +200,7 @@ async function list(req, res) {
   const { date, currentDate, mobile_number } = req.query;
   if (date) {
     const data = await service.listByDate(date);
-    console.log('RES LIST FUNCTION DATA', data);
+    // console.log('RES LIST FUNCTION DATA', data);
     res.json({ data });
   } else if (currentDate) {
     const data = await service.listByDate(currentDate);
@@ -227,10 +227,8 @@ async function create(req, res) {
 
 async function updateReservation(req, res) {
   const reservation = req.body.data;
-  console.log(reservation);
   const newRes = await service.updateReservation(reservation);
   const result = newRes[0];
-  console.log(result);
   res.status(200).json({ data: result });
 }
 

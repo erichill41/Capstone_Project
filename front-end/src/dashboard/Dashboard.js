@@ -135,7 +135,7 @@ console.log(reservations);
              </thead>
             <tbody>
               {reservations.map((res) => (
-                <ReservationDetail reservation={res} key={res.reservation_id}/>
+                <ReservationDetail reservation={res} key={res.reservation_id} />
               ))}
             </tbody>
          </table>

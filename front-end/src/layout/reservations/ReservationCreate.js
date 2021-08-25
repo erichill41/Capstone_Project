@@ -19,7 +19,6 @@ function ReservationCreate({ date }) {
 
   // TODO Create Change Handler √
   const handleChange = ({ target }) => {
-    console.log(target, target.value);
     setReservation({
       ...reservation,
       [target.name]: target.value,

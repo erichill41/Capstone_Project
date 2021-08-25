@@ -109,7 +109,7 @@ async function reservationSeated(req, res, next) {
 
 function tableOpen(req, res, next) {
   const table = res.locals.table;
-  console.log(table);
+  // console.log(table);
   if (!table.reservation_id) {
     return next();
   }
@@ -167,7 +167,7 @@ async function updateSeatRes(req, res) {
 
 async function destroy(req, res) {
   const table = res.locals.table;
-  console.log(table);
+  // console.log(table);
   await service.destroyTableRes(table.table_id, table.reservation_id);
   res.json('');
 }
