@@ -23,8 +23,9 @@ function TableDetail({ table }) {
             table_status: "free",
           })
           listTables()
-          history.push('/tables')
+          history.go(0)
         })
+        
         .catch(setError)
       
     }

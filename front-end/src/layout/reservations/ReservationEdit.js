@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import {updateResStatus, getReservation, updateReservation } from "../../utils/api";
+import { getReservation, listTables, updateReservation } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
 function ReservationEdit() {
@@ -30,16 +30,7 @@ function ReservationEdit() {
     })
   }
 
-  const handleCancelRes = (event) => {
-    event.preventDefault();
-    setError(null);
-    if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
-      updateResStatus({status: "cancelled"}, reservation_id)
-      .then(() => {
-        history.push("/dashboard");
-      })
-    }
-  }
+  
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,7 +39,9 @@ function ReservationEdit() {
       ...currentReservation,
       people: Number(currentReservation.people),
     })
-    .then(() => {
+    .then((response) => {
+      setCurrentReservation({...response})
+      listTables()
       console.log('SUBMIT', currentReservation)
       history.push('/dashboard')
     })
@@ -165,11 +158,7 @@ function ReservationEdit() {
         </div>
         <button type="button" className="btn btn-secondary mr-2" onClick={() => history.goBack()}> Cancel </button>
         <button type="submit" className="btn btn-primary"> Submit Edit </button>
-        <button
-          className="btn btn-danger ml-2"
-          data-reservation-id-cancel={currentReservation.reservation_id}
-          onClick={handleCancelRes}
-          > Cancel Reservation </button>
+        
       </form>
     </>
   )

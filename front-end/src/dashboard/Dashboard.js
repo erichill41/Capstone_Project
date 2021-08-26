@@ -48,7 +48,7 @@ function Dashboard({ date }) {
     }
     
     return () => abortController.abort();
-  },[date, currentDate, history]);
+  },[currentDate, date, history, tables]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -64,7 +64,7 @@ function Dashboard({ date }) {
     if (searchedDate && searchedDate !== '') {
       setCurrentDate(searchedDate);
     }
-  }, [searchedDate]);
+  }, [searchedDate, history]);
 
 // change day handlers
 
@@ -125,15 +125,17 @@ console.log(reservations);
                 <th scope="col"> Last Name </th>
                 <th scope="col"> Party Size </th>
                 <th scope="col"> Phone Number </th>
-                <th scope="col"> Reservation Time </th>
-                <th scope="col"> Reservation Status </th>
-                <th scope="col"> Seat Reservation </th>
-                <th scope="col"> Edit Reservation </th>
+                <th scope="col"> Date </th>
+                <th scope="col"> Time </th>
+                <th scope="col"> Status </th>
+                <th scope="col"> Seat </th>
+                <th scope="col"> Edit </th>
+                <th scope="col"> Cancel </th>
                </tr>
              </thead>
             <tbody>
               {reservations.map((res) => (
-                <ReservationDetail reservation={res} key={res.reservation_id} />
+                <ReservationDetail res={res} key={res.reservation_id} />
               ))}
             </tbody>
          </table>
@@ -157,7 +159,7 @@ console.log(reservations);
              </thead>
             <tbody>
               {tables.map((table) => (
-                <TableDetail table={table} reservations={reservations} key={table.table_id}/>
+                <TableDetail table={table} key={table.table_id}/>
               ))}
             </tbody>
          </table>

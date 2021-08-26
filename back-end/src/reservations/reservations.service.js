@@ -4,7 +4,8 @@ const knex = require('../db/connection');
 function list() {
   return knex('reservations')
     .select('*')
-    .whereNot({ status: "finished" } && { status: "cancelled" })
+    .whereNot({ status: "finished"})
+    .andWhereNot({ status: "cancelled"})
     .orderBy('reservation_time');
 }
 
@@ -12,16 +13,19 @@ function listByDate(reservation_date) {
   return knex('reservations')
     .select('*')
     .where({ reservation_date })
-    .whereNot({ status: "finished" } && { status: "cancelled" })
+    .whereNot({ status: "finished"})
+    .andWhereNot({ status: "cancelled"})
     .orderBy('reservation_time')
 }
 
 function listByPhone(mobile_number) {
   return knex('reservations')
     .select('*')
-    .where({ mobile_number })
-    .whereNot({ status: "finished" } && { status: "cancelled" })
-    .orderBy('reservation_time')
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_id");
 }
 
 function read(reservation_id) {
