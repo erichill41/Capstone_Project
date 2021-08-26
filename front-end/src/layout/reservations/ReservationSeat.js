@@ -36,8 +36,9 @@ function ReservationSeat() {
         return table.table_id === response.table_id ? response : table
       })
       setTables(newTables)
+      history.push('/dashboard')
     })
-    .then(history.push('/dashboard'))
+    
     .catch(setError);
     }
 

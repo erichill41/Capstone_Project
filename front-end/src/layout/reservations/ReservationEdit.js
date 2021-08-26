@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { getReservation, updateReservation } from "../../utils/api";
+import {updateResStatus, getReservation, updateReservation } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
 function ReservationEdit() {
@@ -12,35 +12,52 @@ function ReservationEdit() {
   useEffect(() => {
     getReservation(reservation_id)
     .then((response) => {
-      setCurrentReservation(response)
+      setCurrentReservation({
+        ...response,
+        people: Number(response.people),
+      })
     })
     .catch(setError);
-  }, [history, reservation_id]);
+  }, [reservation_id]);
 
   console.log(currentReservation);
   
   const handleChange = ({ target }) => {
-    console.log(target);
+    //console.log(target);
     setCurrentReservation({
       ...currentReservation,
       [target.name]: target.value,
     })
   }
 
-  const handleCancel = (event) => {
-
+  const handleCancelRes = (event) => {
+    event.preventDefault();
+    setError(null);
+    if (window.confirm("Do you want to cancel this reservation? This cannot be undone.")) {
+      updateResStatus({status: "cancelled"}, reservation_id)
+      .then(() => {
+        history.push("/dashboard");
+      })
+    }
   }
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    updateReservation(currentReservation)
+    
+    updateReservation({
+      ...currentReservation,
+      people: Number(currentReservation.people),
+    })
+    .then(() => {
+      console.log('SUBMIT', currentReservation)
+      history.push('/dashboard')
+    })
     .catch(setError)
-    history.goBack();
   }
 
   return (
     <>
-      <h1> Edit Reservation </h1>
+      <h1> Edit Reservation: {reservation_id} </h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleSubmit} className="form-group">
         <div className="row mb-3">
@@ -151,7 +168,7 @@ function ReservationEdit() {
         <button
           className="btn btn-danger ml-2"
           data-reservation-id-cancel={currentReservation.reservation_id}
-          onClick={handleCancel}
+          onClick={handleCancelRes}
           > Cancel Reservation </button>
       </form>
     </>

@@ -48,7 +48,7 @@ function Dashboard({ date }) {
     }
     
     return () => abortController.abort();
-  },[date, currentDate, history.location]);
+  },[date, currentDate, history]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -58,7 +58,7 @@ function Dashboard({ date }) {
       .catch(setError);
 
     return () => abortController.abort();
-  }, [history.location]);
+  }, [date, currentDate, history.location]);
 
   useEffect(() => {
     if (searchedDate && searchedDate !== '') {
