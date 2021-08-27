@@ -34,7 +34,6 @@ function ReservationEdit() {
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    
     updateReservation({
       ...currentReservation,
       people: Number(currentReservation.people),

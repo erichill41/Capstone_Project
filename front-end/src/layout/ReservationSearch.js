@@ -15,9 +15,7 @@ function ReservationSearch() {
       setError(null);
       listReservations({mobile_number})
       .then((response) => {
-        console.log(response)
         setReservations(response)
-        console.log(mobile_number)
         history.push('/search')
       })
       .catch(setError('No reservations found'))
@@ -48,18 +46,20 @@ function ReservationSearch() {
         <h3 className="mb-3"> Matching Reservations </h3>
         <table className="table table-striped">
           <thead>
-            <th scope="col"> Reservation ID </th>
-            <th scope="col"> First Name </th>
-            <th scope="col"> Last Name </th>
-            <th scope="col"> Party Size </th>
-            <th scope="col"> Phone Number </th>
-            <th scope="col"> Reservation Date </th>
-            <th scope="col"> Reservation Time </th>
-            <th scope="col"> Reservation Status </th>
+            <tr>
+              <th scope="col"> Reservation ID </th>
+              <th scope="col"> First Name </th>
+              <th scope="col"> Last Name </th>
+              <th scope="col"> Party Size </th>
+              <th scope="col"> Phone Number </th>
+              <th scope="col"> Reservation Date </th>
+              <th scope="col"> Reservation Time </th>
+              <th scope="col"> Reservation Status </th>
+            </tr>
           </thead>
           <tbody>
             {reservations.map((res) => (
-              <ReservationDetail res={res} />
+              <ReservationDetail key={res.reservation_id} res={res} />
             ))}
           </tbody>
         </table>
