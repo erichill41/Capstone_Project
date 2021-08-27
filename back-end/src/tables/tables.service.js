@@ -77,15 +77,6 @@ async function updateSeatRes(reservation_id, table_id) {
     .catch(trx.rollback);
 }
 
-// function destroyTableRes(table_id) {
-//   return knex("tables")
-//     .where({ table_id })
-//     .update({
-//       reservation_id: null,
-//       table_status: "free",
-//     }, "*")
-// }
-
 async function destroyTableRes(table_id, reservation_id) {
   const trx = await knex.transaction();
   return trx("tables")

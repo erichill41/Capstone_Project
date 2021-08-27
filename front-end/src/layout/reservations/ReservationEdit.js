@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { getReservation, listTables, updateReservation } from "../../utils/api";
+import { getReservation, updateReservation } from "../../utils/api";
 import ErrorAlert from "../ErrorAlert";
 
-function ReservationEdit() {
+function ReservationEdit({ date }) {
   const { reservation_id } = useParams();
   const [currentReservation, setCurrentReservation] = useState({reservation_id});
   const [error, setError] = useState(null);
@@ -29,22 +29,19 @@ function ReservationEdit() {
       [target.name]: target.value,
     })
   }
-
-  
   
   const handleSubmit = (event) => {
     event.preventDefault();
-    
     updateReservation({
       ...currentReservation,
       people: Number(currentReservation.people),
     })
     .then((response) => {
+      console.log(response)
       setCurrentReservation({...response})
-      listTables()
-      console.log('SUBMIT', currentReservation)
-      history.push('/dashboard')
+      history.push(`/dashboard?date=${currentReservation.reservation_date}`)
     })
+    
     .catch(setError)
   }
 

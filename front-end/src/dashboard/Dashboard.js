@@ -8,7 +8,6 @@ import TableDetail from "../layout/tables/TableDetail";
 
 
 function Dashboard({ date }) {
-
   const [reservations, setReservations] = useState([]);
   const [currentDate, setCurrentDate] = useState(date);
 
@@ -36,29 +35,38 @@ function Dashboard({ date }) {
 
   useEffect(() => {
     const abortController = new AbortController();
-    setError(null);
-    if (currentDate === date) {
-      listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setError);
-    } else {
-      listReservations({ currentDate }, abortController.signal)
-      .then(setReservations)
-      .catch(setError);
+
+    async function loadReservations() {
+      try {
+        if (currentDate === date) {
+          const returnedReservations = await listReservations({ date }, abortController.signal);
+          setReservations(returnedReservations);
+        } else {
+          const returnedReservations = await listReservations({ currentDate }, abortController.signal);
+          setReservations(returnedReservations);
+        }
+      } catch (error) {
+        setError(error);
+      }
     }
-    
+    loadReservations();
     return () => abortController.abort();
-  },[currentDate, date, history, tables]);
+  }, [date, currentDate, history.location])
 
   useEffect(() => {
     const abortController = new AbortController();
-    setError(null);
-    listTables()
-      .then(setTables)
-      .catch(setError);
 
+    async function loadTables() {
+      try {
+        const returnedTables = await listTables();
+        setTables(returnedTables);
+      } catch (error) {
+        setError(error);
+      }
+    }
+    loadTables();
     return () => abortController.abort();
-  }, [date, currentDate, history.location]);
+  }, [history, date, currentDate])
 
   useEffect(() => {
     if (searchedDate && searchedDate !== '') {
@@ -88,8 +96,6 @@ function Dashboard({ date }) {
 
 
 console.log(reservations);
-  // console.log('TABLES', tables);
-  // console.log('CLEAR TABLES', clearTableToggler);
   
   if (reservations) {
     return (
@@ -159,7 +165,7 @@ console.log(reservations);
              </thead>
             <tbody>
               {tables.map((table) => (
-                <TableDetail table={table} key={table.table_id}/>
+                <TableDetail table={table} key={table.table_id} />
               ))}
             </tbody>
          </table>

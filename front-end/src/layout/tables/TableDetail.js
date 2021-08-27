@@ -10,26 +10,54 @@ function TableDetail({ table }) {
 
   console.log(currentTable);
 
-  const handleClear = (event) => {
+  async function clearAndLoadTables() {
+    const abortController = new AbortController();
+    try {
+      const response = await deleteTableReservation(currentTable.table_id, abortController.signal);
+      console.log(response)
+      const tableToSet = response.find((table) => table.table_id === currentTable.table_id);
+      setCurrentTable({...tableToSet})
+      listTables()
+      return tableToSet;
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+  async function handleClear(event) {
+    const abortController = new AbortController();
     event.preventDefault();
     setError(null);
     if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
-      updateResStatus({status: "finished"}, currentTable.reservation_id)
-        .then(() => deleteTableReservation(currentTable.table_id))
-        .then(() => {
-          setCurrentTable({
-            ...table,
-            reservation_id: null,
-            table_status: "free",
-          })
-          listTables()
-          history.go(0)
-        })
-        
-        .catch(setError)
-      
+      await updateResStatus({ status: "finished"}, currentTable.reservation_id, abortController.signal);
+      const newTable = await clearAndLoadTables();
+      console.log(newTable);
+      history.push("/tables");
+      return;
     }
+     
   }
+
+  // const handleClear = (event) => {
+  //   event.preventDefault();
+  //   setError(null);
+  //   if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
+  //     updateResStatus({status: "finished"}, currentTable.reservation_id)
+  //       .then(() => deleteTableReservation(currentTable.table_id))
+  //       .then(() => {
+  //         setCurrentTable({
+  //           ...table,
+  //           reservation_id: null,
+  //           table_status: "free",
+  //         })
+  //         listTables()
+  //         history.go(0)
+  //       })
+        
+  //       .catch(setError)
+      
+  //   }
+  // }
 
   return (
     <>
@@ -40,9 +68,15 @@ function TableDetail({ table }) {
         <td> {currentTable.capacity} </td>
         <td> {currentTable.reservation_id} </td>
         <td data-table-id-status={`${table.table_id}`}> {currentTable.table_status} </td>
-        <td data-table-id-finish={`${table.table_id}`}>
+        <td >
           {currentTable.reservation_id ?
-          <button className="btn btn-danger" onClick={handleClear}> Finish </button>
+          <button
+          className="btn btn-danger"
+          onClick={handleClear}
+          data-table-id-finish={`${table.table_id}`}
+          > 
+          Finish 
+          </button>
           : 
           <></>
           }

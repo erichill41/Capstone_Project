@@ -169,7 +169,8 @@ async function destroy(req, res) {
   const table = res.locals.table;
   // console.log(table);
   await service.destroyTableRes(table.table_id, table.reservation_id);
-  res.json('');
+  const data = await service.list();
+  res.json({data});
 }
 
 module.exports = {

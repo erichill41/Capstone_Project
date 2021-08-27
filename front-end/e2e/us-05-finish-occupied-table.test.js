@@ -82,9 +82,15 @@ describe("US-05 - Finish an occupied table - E2E", () => {
 
       await page.click(finishButtonSelector);
 
+      console.log('WE MADE IT TO HERE');
+      // either we are not getting a reponse or the reponse url doesn't end with tables
+
       await page.waitForResponse((response) => {
         return response.url().endsWith(`/tables`);
       });
+
+      // not being logged so issue lies in 88-90
+      console.log('AND HERE');
 
       await page.screenshot({
         path: ".screenshots/us-05-dashboard-finish-button-after.png",
