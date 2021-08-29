@@ -23,21 +23,16 @@ function ReservationSeat() {
 
     return () => abortController.abort();
   }, []);
-  
-  //console.log(reservation_id, tables);
-  
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const tableObj = JSON.parse(tableFormData);
     updateSeat(tableObj.table_id, reservation_id)
     .then((response) => {
-      console.log(response)
       const newTables = tables.map((table) => {
         return table.table_id === response.table_id ? response : table
       })
       setTables(newTables)
-      console.log(tables);
       history.push('/dashboard')
     })
     

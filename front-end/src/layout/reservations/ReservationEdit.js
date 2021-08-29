@@ -20,10 +20,9 @@ function ReservationEdit({ date }) {
     .catch(setError);
   }, [reservation_id]);
 
-  console.log(currentReservation);
+  
   
   const handleChange = ({ target }) => {
-    //console.log(target);
     setCurrentReservation({
       ...currentReservation,
       [target.name]: target.value,
@@ -37,7 +36,6 @@ function ReservationEdit({ date }) {
       people: Number(currentReservation.people),
     })
     .then((response) => {
-      console.log(response)
       setCurrentReservation({...response})
       history.push(`/dashboard?date=${currentReservation.reservation_date}`)
     })

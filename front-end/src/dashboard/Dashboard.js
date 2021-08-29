@@ -93,9 +93,6 @@ function Dashboard({ date }) {
     history.push('/dashboard');
     setCurrentDate(next(currentDate));
   }
-
-
-console.log(reservations);
   
   if (reservations) {
     return (

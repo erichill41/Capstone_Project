@@ -8,13 +8,10 @@ function TableDetail({ table }) {
   const history = useHistory();
   const [error, setError] = useState(null);
 
-  console.log(currentTable);
-
   async function clearAndLoadTables() {
     const abortController = new AbortController();
     try {
       const response = await deleteTableReservation(currentTable.table_id, abortController.signal);
-      console.log(response)
       const tableToSet = response.find((table) => table.table_id === currentTable.table_id);
       setCurrentTable({...tableToSet})
       listTables()
@@ -37,27 +34,6 @@ function TableDetail({ table }) {
     }
      
   }
-
-  // const handleClear = (event) => {
-  //   event.preventDefault();
-  //   setError(null);
-  //   if (window.confirm("Is this table ready to seat new guests? This cannot be undone.")) {
-  //     updateResStatus({status: "finished"}, currentTable.reservation_id)
-  //       .then(() => deleteTableReservation(currentTable.table_id))
-  //       .then(() => {
-  //         setCurrentTable({
-  //           ...table,
-  //           reservation_id: null,
-  //           table_status: "free",
-  //         })
-  //         listTables()
-  //         history.go(0)
-  //       })
-        
-  //       .catch(setError)
-      
-  //   }
-  // }
 
   return (
     <>

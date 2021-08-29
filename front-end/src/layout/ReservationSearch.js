@@ -15,9 +15,7 @@ function ReservationSearch() {
       setError(null);
       listReservations({mobile_number})
       .then((response) => {
-        console.log(response)
         setReservations(response)
-        console.log(mobile_number)
         history.push('/search')
       })
       .catch(setError('No reservations found'))

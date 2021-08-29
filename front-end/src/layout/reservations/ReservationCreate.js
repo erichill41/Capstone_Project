@@ -28,7 +28,6 @@ function ReservationCreate({ date }) {
   // TODO Create Submit Handler √
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(reservation);
     createReservation({
       ...reservation,
       people: Number(reservation.people),
